@@ -81,6 +81,7 @@ void loop(void)
   imu.add(magneto.z());
 
   serializeJsonPretty(root, Serial);
+  Serial.println("")
 
   packetNo ++;
   delay(90);

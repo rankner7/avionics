@@ -27,7 +27,8 @@ void setup(void)
     while (1);
   }
 
-  bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+  bmp.setSampling(
+  Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
   Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
   Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
@@ -35,7 +36,7 @@ void setup(void)
 
   *alti_offset = bmp.readAltitude(1013.25);
   bno.setExtCrystalUse(true);
-  
+
   delay(1000);
 }
 
@@ -80,7 +81,7 @@ void loop(void)
   imu.add(magneto.y());
   imu.add(magneto.z());
 
-  serializeJsonPretty(root, Serial);
+  serializeJsonPretty(doc, Serial);
   Serial.println("")
 
   packetNo ++;

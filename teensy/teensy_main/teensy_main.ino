@@ -91,17 +91,20 @@ void setup(void)
 
   set_up_gps();
 
+  calibrate_sensors()
+
   piSerial.print("Starting Calibration");
   while (!(BMP_CONNECTED && BNO_CONNECTED && GPS_CONNECTED))
   {
     if ((millis() - calibration_timeout) > maximum_calibration_time) 
       break; 
       
-    pull_data();
+    sample_and_check_data();
   } // while loop
   
   piSerial.print("Calibration Finished");
   final_hand_shake_sequence();
+  altitude_valid = false;
 } // void loop
 
 void loop(void) {
@@ -390,7 +393,8 @@ void initial_hand_shake_sequence()
   }
 }
 
-void pull_data(){
+void sample_and_check_data()
+{
   
   sample_GPS();
 
@@ -409,25 +413,6 @@ void pull_data(){
     //_____________Reset Timer______________//
     timer = millis(); // reset the timer
  
-    //___________Create JSON Object__________// 
-    StaticJsonDocument<500> doc; //PACKET SIZE = 550
-
-    //___________Create JSON Arrays__________//
-    JsonArray hdr = doc.createNestedArray("hdr"); //create the Json Object
-    JsonArray tpa = doc.createNestedArray("tpa");
-    JsonArray imu = doc.createNestedArray("imu");
-    JsonArray gps = doc.createNestedArray("gps");
-
-    tpa = fill_in_bmp_array(tpa);
-
-    imu = fill_in_bno_array(imu);
-
-    gps = fill_in_gps_array(gps);
-
-    set_sensor_status_flags(gps, imu, tpa);
-
-    hdr = fill_in_hdr_array(hdr);
-
-    packetNo++;
+   
   } // timer
 } // function
